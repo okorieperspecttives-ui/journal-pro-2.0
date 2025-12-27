@@ -1,8 +1,11 @@
+import MotionWrapper from "../helpers/MotionWrapper";
 
 const Journal = () => {
   return (
-    <div>Journal</div>
-  )
-}
+    <MotionWrapper>
+      <div>Journal</div>
+    </MotionWrapper>
+  );
+};
 
-export default Journal
+export default Journal;

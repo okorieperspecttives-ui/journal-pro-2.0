@@ -1,9 +1,11 @@
-
+import MotionWrapper from "../helpers/MotionWrapper";
 
 const Analytics = () => {
   return (
-    <div>Analytics</div>
-  )
-}
+    <MotionWrapper>
+      <div>Analytics</div>
+    </MotionWrapper>
+  );
+};
 
-export default Analytics
+export default Analytics;

@@ -8,6 +8,8 @@ import MoodSelector from "../components/MoodSelector";
 import TradeNotes from "../components/TradeNotes";
 import SaveButton from "../components/SaveButton";
 import { useAuth } from "../hooks/useAuth";
+import MotionWrapper from "../helpers/MotionWrapper";
+import { LucideLoader } from "lucide-react";
 
 export default function LogTrade() {
   const [symbol, setSymbol] = useState("");
@@ -87,75 +89,86 @@ export default function LogTrade() {
     return () => subscription.subscription.unsubscribe();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <MotionWrapper>
+        <div className="w-full h-full flex items-center justify-center">
+          <LucideLoader className="animate-spin" />
+        </div>
+      </MotionWrapper>
+    );
 
   if (!user) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-sm text-center">
-          <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
-          <p className="mb-4 text-gray-600">
-            You must be logged in to access this page.
-          </p>
-          <button
-            onClick={() => (window.location.href = "/auth")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-          >
-            Go to Auth Page
-          </button>
+      <MotionWrapper>
+        <div className="h-screen flex items-center justify-center bg-gray-50">
+          <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-sm text-center">
+            <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
+            <p className="mb-4 text-gray-600">
+              You must be logged in to access this page.
+            </p>
+            <button
+              onClick={() => (window.location.href = "/auth")}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+            >
+              Go to Auth Page
+            </button>
+          </div>
         </div>
-      </div>
+      </MotionWrapper>
     );
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
+    <MotionWrapper>
+      <div className="p-4">
+        <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 bg-white rounded-lg shadow p-4"
-      >
-        <SymbolSelector value={symbol} onChange={setSymbol} required={true} />
-        <DirectionToggle value={direction} onChange={setDirection} />
-        <StatusDropdown value={status} onChange={setStatus} />
-        <StrategyDropdown value={strategy} onChange={setStrategy} />
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 bg-white rounded-lg shadow p-4"
+        >
+          <SymbolSelector value={symbol} onChange={setSymbol} required={true} />
+          <DirectionToggle value={direction} onChange={setDirection} />
+          <StatusDropdown value={status} onChange={setStatus} />
+          <StrategyDropdown value={strategy} onChange={setStrategy} />
 
-        {/* Entry Price */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Entry Price
-          </label>
-          <input
-            type="number"
-            value={entryPrice}
-            onChange={(e) => setEntryPrice(e.target.value)}
-            placeholder="0.0000"
-            className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
+          {/* Entry Price */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Entry Price
+            </label>
+            <input
+              type="number"
+              value={entryPrice}
+              onChange={(e) => setEntryPrice(e.target.value)}
+              placeholder="0.0000"
+              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
 
-        {/* Exit Price */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Exit Price
-          </label>
-          <input
-            type="number"
-            value={exitPrice}
-            onChange={(e) => setExitPrice(e.target.value)}
-            placeholder="0.0000"
-            className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
-        </div>
+          {/* Exit Price */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Exit Price
+            </label>
+            <input
+              type="number"
+              value={exitPrice}
+              onChange={(e) => setExitPrice(e.target.value)}
+              placeholder="0.0000"
+              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
 
-        <MoodSelector value={mood} onChange={setMood} />
-        <TradeNotes value={notes} onChange={setNotes} />
-        <SaveButton />
+          <MoodSelector value={mood} onChange={setMood} />
+          <TradeNotes value={notes} onChange={setNotes} />
+          <SaveButton />
 
-        {loading && <p className="text-sm text-gray-500">Saving trade...</p>}
-        {message && <p className="text-sm text-green-600">{message}</p>}
-      </form>
-    </div>
+          {loading && <p className="text-sm text-gray-500">Saving trade...</p>}
+          {message && <p className="text-sm text-green-600">{message}</p>}
+        </form>
+      </div>
+    </MotionWrapper>
   );
 }
