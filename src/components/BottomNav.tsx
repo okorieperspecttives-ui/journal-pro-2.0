@@ -3,7 +3,7 @@ import { LayoutDashboard, PlusCircle, BookOpen, BarChart3 } from "lucide-react";
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-14 bg-white flex justify-around items-center shadow-md  md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 h-14 bg-white flex justify-around items-center shadow-md  md:hidden safe-bottom">
       <NavLink
         to="/"
         className={({ isActive }) =>
