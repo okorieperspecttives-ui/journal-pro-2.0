@@ -7,11 +7,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const ensureUserExists = async (user: any) => {
+    if (!user) return;
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (error && error.code === "PGRST116") {
+        // Not found → insert
+        await supabase.from("users").insert({
+          id: user.id,
+          email: user.email,
+        });
+        console.log(data);
+      }
+    } catch (err) {
+      console.error("Error ensuring user exists:", err);
+    }
+  };
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       console.log("Initial session:", data.session);
       setUser(data.session?.user ?? null);
       setLoading(false);
+      ensureUserExists(data.session?.user);
     });
 
     const { data: subscription } = supabase.auth.onAuthStateChange(
@@ -19,6 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Auth event:", event, "Session:", session);
         setUser(session?.user ?? null);
         setLoading(false);
+        ensureUserExists(session?.user);
       }
     );
 

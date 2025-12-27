@@ -1,5 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, PlusCircle, BookOpen, BarChart3 } from "lucide-react";
+import {
+  LayoutDashboard,
+  PlusCircle,
+  BookOpen,
+  BarChart3,
+  User,
+} from "lucide-react";
 
 export default function BottomNav() {
   return (
@@ -25,7 +31,7 @@ export default function BottomNav() {
         }
       >
         <PlusCircle size={22} />
-        <span className="text-xs">Log Trade</span>
+        <span className="text-xs">New</span>
       </NavLink>
 
       <NavLink
@@ -37,7 +43,7 @@ export default function BottomNav() {
         }
       >
         <BookOpen size={22} />
-        <span className="text-xs">Journal</span>
+        <span className="text-xs">Logs</span>
       </NavLink>
 
       <NavLink
@@ -50,6 +56,18 @@ export default function BottomNav() {
       >
         <BarChart3 size={22} />
         <span className="text-xs">Analytics</span>
+      </NavLink>
+
+      <NavLink
+        to="/profile"
+        className={({ isActive }) =>
+          `flex flex-col items-center ${
+            isActive ? "text-blue-500" : "text-gray-500"
+          }`
+        }
+      >
+        <User size={22} />
+        <span className="text-xs">User</span>
       </NavLink>
     </nav>
   );

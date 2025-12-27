@@ -91,15 +91,19 @@ export default function LogTrade() {
 
   if (!user) {
     return (
-      <div className="p-4">
-        <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
-        <p>You must be logged in to access this page.</p>
-        <button
-          onClick={() => (window.location.href = "/auth")}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-        >
-          Go to Auth Page
-        </button>
+      <div className="h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-sm text-center">
+          <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
+          <p className="mb-4 text-gray-600">
+            You must be logged in to access this page.
+          </p>
+          <button
+            onClick={() => (window.location.href = "/auth")}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+          >
+            Go to Auth Page
+          </button>
+        </div>
       </div>
     );
   }
