@@ -177,6 +177,7 @@ export default function RecentTrades() {
     // ✅ Explicit check: profit requires both entry and exit
     if (profit !== null && (entry === null || exit === null)) {
       setErrorMsg("Profit cannot be saved without both entry and exit prices.");
+      toast.error(errorMsg);
       setSaving(false);
       return;
     }

@@ -159,7 +159,7 @@ export default function Profile() {
                 }
                 rows={3}
                 className="mt-1 w-full rounded-lg bg-gray-50 text-gray-800 p-2 
-             focus:outline-none focus:ring-0 border-none shadow-sm"
+             focus:outline-none focus:ring-0 border-none shadow-sm "
               />
             </div>
 
