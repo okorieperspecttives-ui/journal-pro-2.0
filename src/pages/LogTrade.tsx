@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../config/supabase"; // make sure you have this configured
+import { supabase } from "../config/supabase";
 import SymbolSelector from "../components/SymbolSelector";
 import DirectionToggle from "../components/DirectionToggle";
 import StatusDropdown from "../components/StatusDropdown";
@@ -18,6 +18,8 @@ export default function LogTrade() {
   const [strategy, setStrategy] = useState("Breakout");
   const [entryPrice, setEntryPrice] = useState("");
   const [exitPrice, setExitPrice] = useState("");
+  const [riskUsd, setRiskUsd] = useState("");
+  const [profitUsd, setProfitUsd] = useState("");
   const [mood, setMood] = useState("Neutral");
   const [notes, setNotes] = useState("");
 
@@ -38,14 +40,26 @@ export default function LogTrade() {
       if (userError) throw userError;
       if (!user) throw new Error("User not authenticated");
 
+      // Parse numeric values
+      const entry = entryPrice ? parseFloat(entryPrice) : null;
+      const exit = exitPrice ? parseFloat(exitPrice) : null;
+      const risk = riskUsd ? parseFloat(riskUsd) : null;
+      const profit = profitUsd ? parseFloat(profitUsd) : null;
+
+      // Auto-calc return_r if risk and profit are provided
+      const returnR = risk && profit ? profit / risk : null;
+
       const { error } = await supabase.from("trade_entries").insert([
         {
           symbol,
           direction,
           status,
           strategy,
-          entry_price: entryPrice ? parseFloat(entryPrice) : null,
-          exit_price: exitPrice ? parseFloat(exitPrice) : null,
+          entry_price: entry,
+          exit_price: exit,
+          risk_usd: risk,
+          profit_usd: profit,
+          return_r: returnR,
           mood,
           notes,
           user_id: user.id,
@@ -63,6 +77,8 @@ export default function LogTrade() {
       setStrategy("Breakout");
       setEntryPrice("");
       setExitPrice("");
+      setRiskUsd("");
+      setProfitUsd("");
       setMood("Neutral");
       setNotes("");
     } catch (err: any) {
@@ -157,6 +173,34 @@ export default function LogTrade() {
               value={exitPrice}
               onChange={(e) => setExitPrice(e.target.value)}
               placeholder="0.0000"
+              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Risk USD */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Risk (USD)
+            </label>
+            <input
+              type="number"
+              value={riskUsd}
+              onChange={(e) => setRiskUsd(e.target.value)}
+              placeholder="100"
+              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Profit/Loss USD */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Profit/Loss (USD)
+            </label>
+            <input
+              type="number"
+              value={profitUsd}
+              onChange={(e) => setProfitUsd(e.target.value)}
+              placeholder="150"
               className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
