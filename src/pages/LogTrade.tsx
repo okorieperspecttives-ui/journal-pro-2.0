@@ -14,7 +14,7 @@ import { LucideLoader } from "lucide-react";
 export default function LogTrade() {
   const [symbol, setSymbol] = useState("");
   const [direction, setDirection] = useState("Long");
-  const [status, setStatus] = useState("Open");
+  const [status, setStatus] = useState("Pending");
   const [strategy, setStrategy] = useState("Breakout");
   const [entryPrice, setEntryPrice] = useState("");
   const [exitPrice, setExitPrice] = useState("");
@@ -53,7 +53,7 @@ export default function LogTrade() {
         {
           symbol,
           direction,
-          status,
+          status, // will be "Pending" unless explicitly changed
           strategy,
           entry_price: entry,
           exit_price: exit,
@@ -73,7 +73,7 @@ export default function LogTrade() {
       // reset form
       setSymbol("");
       setDirection("Long");
-      setStatus("Open");
+      setStatus("Pending"); // reset back to Pending
       setStrategy("Breakout");
       setEntryPrice("");
       setExitPrice("");

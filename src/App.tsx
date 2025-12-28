@@ -11,6 +11,8 @@ import Analytics from "./pages/Analytics";
 import BottomNav from "./components/BottomNav";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
   return (
@@ -29,6 +31,10 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
+
+        {/*Toast Container */}
+
+        <ToastContainer position="top-right" autoClose={3000} />
 
         {/* Bottom nav pinned at bottom (mobile only) */}
         <BottomNav />

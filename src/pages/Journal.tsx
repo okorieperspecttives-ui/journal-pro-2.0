@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "../config/supabase";
 import { useAuth } from "../hooks/useAuth";
 import MotionWrapper from "../helpers/MotionWrapper";
-import { LucideLoader, Save, X } from "lucide-react";
+import { Check, LucideLoader, Save, Trash, X } from "lucide-react";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 // Define the trade entry type
 interface TradeEntry {
@@ -25,17 +26,30 @@ interface TradeEntry {
 }
 
 type GroupedTrades = Record<string, TradeEntry[]>;
+type ConfirmModalType = "delete" | "saveall" | null;
 
 export default function RecentTrades() {
   const { user } = useAuth();
   const [trades, setTrades] = useState<TradeEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  // inside your component
+  const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [filter, setFilter] = useState<
     "All" | "Winning" | "Losing" | "Long" | "Short"
   >("All");
   const [search, setSearch] = useState("");
   const [selectedTrade, setSelectedTrade] = useState<TradeEntry | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actionModalOpen, setActionModalOpen] = useState(false);
+
+  const [confirmModal, setConfirmModal] = useState<{
+    type: ConfirmModalType;
+    open: boolean;
+  }>({
+    type: null,
+    open: false,
+  });
 
   const openModal = async (tradeId: string) => {
     const { data, error } = await supabase
@@ -55,9 +69,99 @@ export default function RecentTrades() {
     setIsModalOpen(false);
   };
 
-  // inside your component
-  const [saving, setSaving] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const handleDelete = (id: string) => {
+    console.log("Pretend deleting trade with id:", id);
+    setConfirmModal({ type: null, open: false });
+    setActionModalOpen(false);
+  };
+
+  const handleSaveAll = async () => {
+    if (!selectedTrade) return;
+
+    setSaving(true);
+    setErrorMsg(null);
+
+    const num = (v: unknown): number | null => {
+      if (v === null || v === undefined || v === "") return null;
+      const n = typeof v === "string" ? Number(v.trim()) : (v as number);
+      return Number.isFinite(n) ? n : null;
+    };
+    const str = (v: unknown): string =>
+      typeof v === "string" ? v.trim() : (v as string) ?? "";
+
+    const symbol = str(selectedTrade.symbol);
+    const executedAt = selectedTrade.executed_at ?? null;
+    const direction: "Long" | "Short" =
+      selectedTrade.direction === "Short" ? "Short" : "Long";
+
+    const entry = num(selectedTrade.entry_price);
+    const exit = num(selectedTrade.exit_price);
+    const risk = num(selectedTrade.risk_usd);
+    const profit = num(selectedTrade.profit_usd);
+
+    const isSettled = entry !== null && exit !== null;
+
+    // ✅ Settlement required for finalization
+    if (!isSettled) {
+      toast.error(
+        "Cannot finalize: trade must have both entry and exit prices."
+      );
+      setConfirmModal({ type: null, open: false });
+      setActionModalOpen(false);
+      setSaving(false);
+      return;
+    }
+
+    // ✅ Required field checks
+    if (!symbol || !executedAt || !direction) {
+      toast.error("Cannot finalize: missing required fields.");
+      setConfirmModal({ type: null, open: false });
+      setActionModalOpen(false);
+      setSaving(false);
+      return;
+    }
+
+    // ✅ Safe return in R calculation
+    const returnR =
+      risk !== null && risk > 0 && profit !== null ? profit / risk : null;
+
+    const payload = {
+      ...selectedTrade,
+      symbol,
+      entry_price: entry,
+      exit_price: exit,
+      risk_usd: risk,
+      profit_usd: profit,
+      notes: str(selectedTrade.notes),
+      direction,
+      return_r: returnR,
+      finalized: true,
+    };
+
+    try {
+      const { error } = await supabase
+        .from("trade_entries")
+        .update(payload)
+        .eq("id", selectedTrade.id);
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        setTrades((prev) =>
+          prev.map((t) =>
+            t.id === selectedTrade.id ? ({ ...t, ...payload } as TradeEntry) : t
+          )
+        );
+        toast.success("Trade finalized successfully");
+      }
+    } catch (err: any) {
+      toast.error(err.message ?? "Unexpected error occurred");
+    } finally {
+      setConfirmModal({ type: null, open: false });
+      setActionModalOpen(false);
+      setSaving(false);
+    }
+  };
 
   const handleSave = async () => {
     if (!selectedTrade) return;
@@ -65,19 +169,31 @@ export default function RecentTrades() {
     setSaving(true);
     setErrorMsg(null);
 
-    // Normalize values before sending
+    const entry = selectedTrade.entry_price ?? null;
+    const exit = selectedTrade.exit_price ?? null;
+    const risk = selectedTrade.risk_usd ?? null;
+    let profit = selectedTrade.profit_usd ?? null;
+
+    // ✅ Explicit check: profit requires both entry and exit
+    if (profit !== null && (entry === null || exit === null)) {
+      setErrorMsg("Profit cannot be saved without both entry and exit prices.");
+      setSaving(false);
+      return;
+    }
+
+    // Derive return in R only if risk and profit are valid
+    const returnR =
+      risk !== null && risk > 0 && profit !== null ? profit / risk : null;
+
     const payload = {
       symbol: selectedTrade.symbol ?? "",
-      entry_price: selectedTrade.entry_price ?? null,
-      exit_price: selectedTrade.exit_price ?? null,
-      risk_usd: selectedTrade.risk_usd ?? null,
-      profit_usd: selectedTrade.profit_usd ?? null,
+      entry_price: entry,
+      exit_price: exit,
+      risk_usd: risk,
+      profit_usd: profit,
       notes: selectedTrade.notes ?? "",
-      direction: selectedTrade.direction ?? "Long",
-      return_r:
-        selectedTrade.risk_usd && selectedTrade.profit_usd
-          ? selectedTrade.profit_usd / selectedTrade.risk_usd
-          : null,
+      direction: selectedTrade.direction === "Short" ? "Short" : "Long",
+      return_r: returnR,
     };
 
     try {
@@ -89,10 +205,9 @@ export default function RecentTrades() {
       if (error) {
         setErrorMsg(error.message);
       } else {
-        // Update local state so UI reflects changes immediately
         setTrades((prev) =>
           prev.map((t) =>
-            t.id === selectedTrade.id ? { ...t, ...payload } : t
+            t.id === selectedTrade.id ? ({ ...t, ...payload } as TradeEntry) : t
           )
         );
         closeModal();
@@ -107,14 +222,19 @@ export default function RecentTrades() {
   useEffect(() => {
     const fetchTrades = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from("trade_entries")
-        .select("*")
-        .eq("user_id", user?.id)
-        .order("executed_at", { ascending: false });
 
-      if (!error && data) setTrades(data as TradeEntry[]);
-      setLoading(false);
+      try {
+        const { data, error } = await supabase
+          .from("trade_entries")
+          .select("*")
+          .eq("user_id", user?.id)
+          .order("executed_at", { ascending: false });
+
+        if (!error && data) setTrades(data as TradeEntry[]);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
     };
     if (user) fetchTrades();
   }, [user]);
@@ -150,6 +270,27 @@ export default function RecentTrades() {
     acc[monthKey].push(trade);
     return acc;
   }, {} as GroupedTrades);
+
+  if (!user) {
+    return (
+      <MotionWrapper>
+        <div className="h-screen flex items-center justify-center bg-gray-50">
+          <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-sm text-center">
+            <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
+            <p className="mb-4 text-gray-600">
+              You must be logged in to access this page.
+            </p>
+            <button
+              onClick={() => (window.location.href = "/auth")}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+            >
+              Go to Auth Page
+            </button>
+          </div>
+        </div>
+      </MotionWrapper>
+    );
+  }
 
   if (loading) {
     return (
@@ -220,53 +361,73 @@ export default function RecentTrades() {
               </p>
             ) : (
               <ul className="space-y-2">
-                {trades.map((trade) => (
-                  <li
-                    onClick={() => openModal(trade.id)}
-                    key={trade.id}
-                    className={`flex justify-between bg-white p-3 pl-4 rounded-lg shadow-sm border-l-4 mb-3 ${
-                      trade.direction === "Long"
-                        ? "border-green-500"
-                        : "border-red-500"
-                    }`}
-                  >
-                    <div>
-                      <p className="font-semibold">{trade.symbol}</p>
-                      <p className="text-xs text-gray-500">
-                        {trade.strategy} •{" "}
-                        {dayjs(trade.executed_at).format("MMM D")}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p
-                        className={`font-semibold ${
-                          (trade.return_r ?? 0) > 0
-                            ? "text-green-600"
-                            : (trade.return_r ?? 0) < 0
-                            ? "text-red-600"
-                            : "text-gray-600"
-                        }`}
-                      >
-                        {trade.return_r !== null
-                          ? `${trade.return_r.toFixed(2)}R`
-                          : "—"}
-                      </p>
-                      <p
-                        className={`text-sm ${
-                          (trade.profit_usd ?? 0) > 0
-                            ? "text-green-600"
-                            : (trade.profit_usd ?? 0) < 0
-                            ? "text-red-600"
-                            : "text-gray-600"
-                        }`}
-                      >
-                        {trade.profit_usd !== null
-                          ? `$${trade.profit_usd.toFixed(2)}`
-                          : "$0.00"}
-                      </p>
-                    </div>
-                  </li>
-                ))}
+                {trades.map((trade) => {
+                  let pressTimer: ReturnType<typeof setTimeout>;
+
+                  const handleMouseDown = () => {
+                    pressTimer = setTimeout(() => {
+                      setSelectedTrade(trade);
+                      setActionModalOpen(true);
+                    }, 800); // 800ms hold
+                  };
+
+                  const handleMouseUp = () => {
+                    clearTimeout(pressTimer);
+                  };
+
+                  return (
+                    <li
+                      key={trade.id}
+                      onClick={() => openModal(trade.id)} // normal click
+                      onMouseDown={handleMouseDown}
+                      onMouseUp={handleMouseUp}
+                      onMouseLeave={handleMouseUp}
+                      onTouchStart={handleMouseDown}
+                      onTouchEnd={handleMouseUp}
+                      className={`flex justify-between bg-white p-3 pl-4 rounded-lg shadow-sm border-l-4 mb-3 ${
+                        trade.direction === "Long"
+                          ? "border-green-500"
+                          : "border-red-500"
+                      }`}
+                    >
+                      <div>
+                        <p className="font-semibold">{trade.symbol}</p>
+                        <p className="text-xs text-gray-500">
+                          {trade.strategy} •{" "}
+                          {dayjs(trade.executed_at).format("MMM D")}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p
+                          className={`font-semibold ${
+                            (trade.return_r ?? 0) > 0
+                              ? "text-green-600"
+                              : (trade.return_r ?? 0) < 0
+                              ? "text-red-600"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {trade.return_r !== null
+                            ? `${trade.return_r.toFixed(2)}R`
+                            : "—"}
+                        </p>
+                        <p
+                          className={`text-sm ${
+                            (trade.profit_usd ?? 0) > 0
+                              ? "text-green-600"
+                              : (trade.profit_usd ?? 0) < 0
+                              ? "text-red-600"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          {trade.profit_usd !== null
+                            ? `$${trade.profit_usd.toFixed(2)}`
+                            : "$0.00"}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
@@ -364,6 +525,23 @@ export default function RecentTrades() {
                     <option value="Short">Short</option>
                   </select>
 
+                  {/* Status */}
+                  <select
+                    value={selectedTrade?.status ?? "Pending"}
+                    onChange={(e) =>
+                      setSelectedTrade({
+                        ...selectedTrade!,
+                        status: e.target.value,
+                      })
+                    }
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+
                   {/* Notes */}
                   <textarea
                     value={selectedTrade?.notes ?? ""}
@@ -396,6 +574,83 @@ export default function RecentTrades() {
                     ) : (
                       <Save className="w-7 h-7" />
                     )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </MotionWrapper>
+        )}
+
+        {actionModalOpen && selectedTrade && (
+          <MotionWrapper>
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+              <div className="bg-gray-100 rounded-lg shadow-lg p-6 max-w-sm w-[90%] text-center">
+                <h2 className="text-lg font-semibold mb-4">Choose Action</h2>
+
+                {/* Action buttons */}
+                <div className="flex justify-center gap-6">
+                  {/* Delete */}
+                  <button
+                    onClick={() =>
+                      setConfirmModal({ type: "delete", open: true })
+                    }
+                    className="p-4 bg-red-600 text-white rounded-full"
+                  >
+                    <Trash className="w-8 h-8" />
+                  </button>
+
+                  {/* Save All */}
+                  <button
+                    onClick={() =>
+                      setConfirmModal({ type: "saveall", open: true })
+                    }
+                    className="p-4 bg-blue-600 text-white rounded-full"
+                  >
+                    <Save className="w-8 h-8" />
+                  </button>
+                </div>
+
+                {/* Cancel */}
+                <button
+                  onClick={() => setActionModalOpen(false)}
+                  className="mt-6 p-3 bg-gray-300 rounded-full"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+          </MotionWrapper>
+        )}
+
+        {confirmModal.open && selectedTrade && (
+          <MotionWrapper>
+            <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-[90%] text-center">
+                <h2 className="text-lg font-semibold mb-4">
+                  {confirmModal.type === "delete"
+                    ? "Confirm Delete?"
+                    : "Confirm Save All?"}
+                </h2>
+
+                <div className="flex justify-center gap-6">
+                  {/* Confirm */}
+                  <button
+                    onClick={() =>
+                      confirmModal.type === "delete"
+                        ? handleDelete(selectedTrade.id)
+                        : handleSaveAll()
+                    }
+                    className="p-4 bg-green-600 text-white rounded-full"
+                  >
+                    <Check className="w-8 h-8" />
+                  </button>
+
+                  {/* Cancel */}
+                  <button
+                    onClick={() => setConfirmModal({ type: null, open: false })}
+                    className="p-4 bg-gray-300 rounded-full"
+                  >
+                    <X className="w-8 h-8" />
                   </button>
                 </div>
               </div>
