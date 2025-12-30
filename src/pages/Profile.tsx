@@ -96,7 +96,7 @@ export default function Profile() {
         {/* Logout icon top-right */}
         <button
           onClick={() => setShowConfirm(true)}
-          className="absolute top-4 right-4 text-gray-800 hover:text-red-600 p-2 bg-blue-200/50 rounded-full m-2"
+          className="absolute top-4 right-4 text-gray-800 hover:text-red-600 p-2 bg-blue-200/50 rounded-full m-2 cursor-pointer"
           title="Logout"
         >
           <LucideLogOut className="w-6 h-6" />
@@ -165,7 +165,7 @@ export default function Profile() {
 
             <button
               type="submit"
-              className="w-full py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+              className="w-full py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition cursor-pointer"
             >
               Save Changes
             </button>
@@ -176,11 +176,13 @@ export default function Profile() {
           )}
 
           {showConfirm && (
-            <ConfirmDialog
-              message="Are you sure you want to log out?"
-              onConfirm={handleLogout}
-              onCancel={() => setShowConfirm(false)}
-            />
+            <MotionWrapper>
+              <ConfirmDialog
+                message="Are you sure you want to log out?"
+                onConfirm={handleLogout}
+                onCancel={() => setShowConfirm(false)}
+              />
+            </MotionWrapper>
           )}
         </div>
       </div>

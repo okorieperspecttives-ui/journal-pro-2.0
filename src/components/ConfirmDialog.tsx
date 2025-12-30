@@ -1,5 +1,7 @@
 // components/ConfirmDialog.tsx
 
+import { LogOut, X } from "lucide-react";
+
 interface ConfirmDialogProps {
   message: string;
   onConfirm: () => void;
@@ -18,15 +20,15 @@ export default function ConfirmDialog({
         <div className="flex justify-end space-x-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
           >
-            Cancel
+            <X />
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+            className="px-4 py-2 rounded bg-red-600 text-white cursor-pointer hover:bg-red-700"
           >
-            Logout
+            <LogOut />
           </button>
         </div>
       </div>

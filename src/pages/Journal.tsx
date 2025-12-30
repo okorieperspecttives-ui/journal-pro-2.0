@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 
 // Define the trade entry type
-interface TradeEntry {
+ export interface TradeEntry {
   id: string;
   user_id: string;
   symbol: string;
