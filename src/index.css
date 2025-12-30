@@ -11,3 +11,44 @@
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
 }
+
+.no-highlight-card {
+  /* Prevent text selection/highlighting */
+  user-select: none;
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  -webkit-user-select: none; /* Safari/Chrome */
+
+  /* Prevent iOS Safari long-press callout */
+  -webkit-touch-callout: none;
+
+  /* Prevent dragging of text/images */
+  -webkit-user-drag: none;
+  user-drag: none;
+
+  /* Prevent tap highlight color on mobile */
+  -webkit-tap-highlight-color: transparent;
+
+  /* Optional: disable pointer events if you don’t need clicks inside */
+  /* pointer-events: none; */
+}
+
+.remove-scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  -webkit-scrollbar-width: none;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+.remove-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Hide scrollbar for Firefox */
+.remove-scrollbar {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for IE, Edge */
+.remove-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+}

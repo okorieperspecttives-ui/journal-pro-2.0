@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../config/supabase";
 import { useAuth } from "../hooks/useAuth";
-import ConfirmDialog from "../ConfirmDialog";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 import { useNavigate } from "react-router-dom";
 import { LucideLoader, LucideLogOut } from "lucide-react";

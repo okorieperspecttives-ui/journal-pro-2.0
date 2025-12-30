@@ -69,10 +69,32 @@ export default function RecentTrades() {
     setIsModalOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    console.log("Pretend deleting trade with id:", id);
-    setConfirmModal({ type: null, open: false });
-    setActionModalOpen(false);
+  const handleDelete = async (id: string) => {
+    setSaving(true);
+    setErrorMsg(null);
+
+    try {
+      // 🔧 Delete from Supabase
+      const { error } = await supabase
+        .from("trade_entries")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        // ✅ Update local state
+        setTrades((prev) => prev.filter((t) => t.id !== id));
+        toast.success("Trade deleted successfully");
+      }
+    } catch (err: any) {
+      toast.error(err.message ?? "Unexpected error occurred");
+    } finally {
+      // ✅ Close modals and reset saving state
+      setConfirmModal({ type: null, open: false });
+      setActionModalOpen(false);
+      setSaving(false);
+    }
   };
 
   const handleSaveAll = async () => {
@@ -305,7 +327,7 @@ export default function RecentTrades() {
 
   return (
     <MotionWrapper>
-      <div className="p-4">
+      <div className="p-4 remove-scrollbar">
         <h1 className="text-xl font-semibold mb-4">Recent Trades</h1>
 
         {/* Search + Filters */}
@@ -341,7 +363,7 @@ export default function RecentTrades() {
                 <button
                   key={f}
                   onClick={() => setFilter(f as typeof filter)}
-                  className={`px-3 py-1 rounded-full text-sm transition ${
+                  className={`px-3 py-1 rounded-full cursor-pointer text-sm transition ${
                     filter === f ? activeColors[f] : colors[f]
                   }`}
                 >
@@ -385,7 +407,7 @@ export default function RecentTrades() {
                       onMouseLeave={handleMouseUp}
                       onTouchStart={handleMouseDown}
                       onTouchEnd={handleMouseUp}
-                      className={`flex justify-between bg-white p-3 pl-4 rounded-lg shadow-sm border-l-4 mb-3 ${
+                      className={`flex justify-between bg-white p-3 pl-4 .no-highlight-card cursor-pointer rounded-lg shadow-sm border-l-4 mb-3 ${
                         trade.direction === "Long"
                           ? "border-green-500"
                           : "border-red-500"
@@ -595,7 +617,7 @@ export default function RecentTrades() {
                     onClick={() =>
                       setConfirmModal({ type: "delete", open: true })
                     }
-                    className="p-4 bg-red-600 text-white rounded-full"
+                    className="p-4 bg-red-600 text-white rounded-full cursor-pointer"
                   >
                     <Trash className="w-8 h-8" />
                   </button>
@@ -605,7 +627,7 @@ export default function RecentTrades() {
                     onClick={() =>
                       setConfirmModal({ type: "saveall", open: true })
                     }
-                    className="p-4 bg-blue-600 text-white rounded-full"
+                    className="p-4 bg-blue-600 text-white rounded-full cursor-pointer"
                   >
                     <Save className="w-8 h-8" />
                   </button>
@@ -614,7 +636,7 @@ export default function RecentTrades() {
                 {/* Cancel */}
                 <button
                   onClick={() => setActionModalOpen(false)}
-                  className="mt-6 p-3 bg-gray-300 rounded-full"
+                  className="mt-6 p-3 bg-gray-300 rounded-full cursor-pointer"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -641,7 +663,7 @@ export default function RecentTrades() {
                         ? handleDelete(selectedTrade.id)
                         : handleSaveAll()
                     }
-                    className="p-4 bg-green-600 text-white rounded-full"
+                    className="p-4 bg-green-600 text-white rounded-full cursor-pointer"
                   >
                     <Check className="w-8 h-8" />
                   </button>
@@ -649,7 +671,7 @@ export default function RecentTrades() {
                   {/* Cancel */}
                   <button
                     onClick={() => setConfirmModal({ type: null, open: false })}
-                    className="p-4 bg-gray-300 rounded-full"
+                    className="p-4 bg-gray-300 rounded-full cursor-pointer"
                   >
                     <X className="w-8 h-8" />
                   </button>

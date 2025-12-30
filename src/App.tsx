@@ -20,7 +20,7 @@ export default function App() {
       {/* Mobile-first app shell */}
       <div className="h-screen max-w-sm md:max-w-screen mx-auto bg-gray-50 flex flex-co safe-area">
         {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto remove-scrollbar">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
