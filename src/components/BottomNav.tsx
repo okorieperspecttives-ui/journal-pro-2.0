@@ -14,7 +14,7 @@ export default function BottomNav() {
       <NavLink
         to="/dashboard"
         className={({ isActive }) =>
-          `flex items-center justify-center h-10 px-4 transition-all duration-200 ${
+          `flex items-center justify-center h-10 px-4 transition-all duration-1000 ${
             isActive
               ? "bg-white rounded-full text-blue-600 shadow-sm"
               : "text-white"

@@ -1,118 +1,212 @@
+import { useEffect, useState } from "react";
 import { LucideLoader } from "lucide-react";
 import MotionWrapper from "../helpers/MotionWrapper";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import dayjs from "dayjs";
+import { supabase } from "../config/supabase"; // adjust path
+import type { TradeEntry } from "../types";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
-
   const navigate = useNavigate();
 
-  if (loading)
+  // Local state for dashboard data
+  const [recentEntries, setRecentEntries] = useState<TradeEntry[]>([]);
+  const [weeklyTrades, setWeeklyTrades] = useState<TradeEntry[]>([]);
+  const [moodData, setMoodData] = useState<any>(null);
+  const [pnl, setPnl] = useState<number>(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchDashboardData = async () => {
+      const startOfWeek = dayjs().startOf("week").toISOString();
+      const endOfWeek = dayjs().endOf("week").toISOString();
+
+      // 1. Recent entries (last 2 trades)
+      const { data: recent, error: recentErr } = await supabase
+        .from("trade_entries")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("executed_at", { ascending: false })
+        .limit(2);
+      if (!recentErr && recent) setRecentEntries(recent);
+
+      // 2. Weekly trades
+      const { data: weekly, error: weeklyErr } = await supabase
+        .from("trade_entries")
+        .select("*")
+        .eq("user_id", user.id)
+        .gte("executed_at", startOfWeek)
+        .lte("executed_at", endOfWeek);
+      if (!weeklyErr && weekly) setWeeklyTrades(weekly);
+
+      // 3. Mood stats for weekly trades
+      if (weekly) {
+        const moodStats: Record<string, number> = {};
+        weekly.forEach((t) => {
+          const mood = t.mood ?? "Unknown";
+          moodStats[mood] = (moodStats[mood] ?? 0) + 1;
+        });
+        setMoodData({
+          labels: Object.keys(moodStats),
+          datasets: [
+            {
+              data: Object.values(moodStats),
+              backgroundColor: [
+                "#3b82f6",
+                "#ef4444",
+                "#10b981",
+                "#f59e0b",
+                "#8b5cf6",
+              ],
+            },
+          ],
+        });
+      }
+
+      // 4. Equity summary (PnL aggregation)
+      const { data: allTrades, error: allErr } = await supabase
+        .from("trade_entries")
+        .select("profit_usd")
+        .eq("user_id", user.id);
+      if (!allErr && allTrades) {
+        const totalPnl = allTrades.reduce(
+          (acc, t) => acc + (t.profit_usd ?? 0),
+          0
+        );
+        setPnl(totalPnl);
+      }
+    };
+
+    fetchDashboardData();
+  }, [user]);
+
+  if (loading) {
     return (
       <MotionWrapper>
         <div className="w-full h-full flex items-center justify-center">
-          <LucideLoader className="animate-spin" />
+          <LucideLoader className="animate-spin text-blue-600" size={32} />
         </div>
       </MotionWrapper>
     );
-
-  //
+  }
 
   if (!user) {
-    // Public dashboard: incentives
     return (
       <MotionWrapper>
         <div className="h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Welcome to TradePilot
           </h1>
-
-          <div className="grid gap-4 w-full max-w-md">
-            {/* Incentive Card */}
-            <div
-              onClick={() => navigate("/auth")}
-              className="bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition"
-            >
-              <h2 className="text-lg font-semibold mb-2">
-                📈 Track Your Trades
-              </h2>
-              <p className="text-sm text-gray-600">
-                Log every trade with precision and build your trading journal.
-              </p>
-            </div>
-
-            <div
-              onClick={() => navigate("/auth")}
-              className="bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition"
-            >
-              <h2 className="text-lg font-semibold mb-2">
-                📊 Analyze Performance
-              </h2>
-              <p className="text-sm text-gray-600">
-                Visualize your win rate, PnL, and trading patterns over time.
-              </p>
-            </div>
-
-            <div
-              onClick={() => navigate("/auth")}
-              className="bg-white rounded-xl shadow-md p-6 cursor-pointer hover:shadow-lg transition"
-            >
-              <h2 className="text-lg font-semibold mb-2">
-                🧠 Learn From Mistakes
-              </h2>
-              <p className="text-sm text-gray-600">
-                Review journal entries and refine your strategy with insights.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => navigate("/auth")}
-            className="mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-          >
-            Get Started
-          </button>
+          {/* Public incentives */}
         </div>
       </MotionWrapper>
     );
   }
 
-  // Authenticated dashboard
+  // Weekly stats
+  const wins = weeklyTrades.filter((t) => (t.profit_usd ?? 0) > 0).length;
+  const losses = weeklyTrades.filter((t) => (t.profit_usd ?? 0) < 0).length;
+
   return (
     <MotionWrapper>
-      <div className="h-screen bg-gray-50 flex flex-col items-center justify-start p-6">
-        {/* Header */}
-        <div className="w-full max-w-md text-left mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-        </div>
+      <div className="h-screen bg-gray-50 p-6 overflow-y-auto">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
-        {/* Main Card Container */}
-        <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-md space-y-6">
-          {/* Placeholder: Equity Section */}
-          <div className="bg-gray-100 rounded-lg p-4 text-gray-500 text-center">
-            📊 Equity section coming soon...
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 1. Equity & Account Summary */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-lg font-semibold text-blue-600 mb-4">
+              Equity & Account Summary
+            </h2>
+            <p className="text-sm text-gray-600">
+              Balance: ${user.balance ?? 0}
+            </p>
+            <p className="text-sm text-gray-600">
+              Equity: ${(user.balance ?? 0) + pnl}
+            </p>
+            <p className="text-sm text-gray-600">PnL: ${pnl}</p>
           </div>
 
-          {/* Placeholder: Recent Activity */}
-          <div className="bg-gray-100 rounded-lg p-4 text-gray-500 text-center">
-            🕒 Recent activity will appear here.
+          {/* 2. Current Week Performance */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-lg font-semibold text-blue-600 mb-4">
+              This Week
+            </h2>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="bg-blue-50 rounded-lg p-3 text-center">
+                <p className="font-medium text-gray-700">Trades</p>
+                <p className="text-blue-600 font-bold">{weeklyTrades.length}</p>
+              </div>
+              <div className="bg-blue-50 rounded-lg p-3 text-center">
+                <p className="font-medium text-gray-700">Wins</p>
+                <p className="text-green-600 font-bold">{wins}</p>
+              </div>
+              <div className="bg-blue-50 rounded-lg p-3 text-center">
+                <p className="font-medium text-gray-700">Losses</p>
+                <p className="text-red-600 font-bold">{losses}</p>
+              </div>
+              <div className="bg-blue-50 rounded-lg p-3 text-center">
+                <p className="font-medium text-gray-700">Win Rate</p>
+                <p className="text-blue-600 font-bold">
+                  {weeklyTrades.length
+                    ? Math.round((wins / weeklyTrades.length) * 100)
+                    : 0}
+                  %
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Placeholder: Quick Links */}
-          <div className="grid grid-cols-2 gap-4">
-            <button className="bg-gray-200 rounded-lg p-4 hover:bg-gray-300 transition">
-              Trades
-            </button>
-            <button className="bg-gray-200 rounded-lg p-4 hover:bg-gray-300 transition">
-              Journal
-            </button>
-            <button className="bg-gray-200 rounded-lg p-4 hover:bg-gray-300 transition">
-              Analytics
-            </button>
-            <button className="bg-gray-200 rounded-lg p-4 hover:bg-gray-300 transition">
-              Profile
-            </button>
+          {/* 3. Recent Journal Entries */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-blue-600">
+                Recent Journal Entries
+              </h2>
+              <button
+                onClick={() => navigate("/journal")}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                View All
+              </button>
+            </div>
+            {recentEntries.length === 0 ? (
+              <p className="text-sm text-gray-500">No entries yet.</p>
+            ) : (
+              <div className="space-y-3">
+                {recentEntries.map((entry) => (
+                  <div
+                    key={entry.id}
+                    onClick={() => navigate(`/journal/${entry.id}`)}
+                    className="bg-blue-50 rounded-lg p-4 cursor-pointer hover:bg-blue-100 transition"
+                  >
+                    <h3 className="text-sm font-semibold text-gray-800">
+                      {entry.symbol} — {entry.strategy}
+                    </h3>
+                    <p className="text-xs text-gray-600 truncate">
+                      {entry.notes ?? "No notes"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 4. Mood Impact */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-lg font-semibold text-blue-600 mb-4">
+              Mood Impact
+            </h2>
+            <div className="w-full h-64">
+              {moodData ? <Pie data={moodData} /> : <p>No mood data</p>}
+            </div>
           </div>
         </div>
       </div>
