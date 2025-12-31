@@ -22,7 +22,9 @@ export default function MoodImpact({ trades }: MoodImpactProps) {
     const mood = t.mood ?? "Unknown";
     if (!moodStats[mood]) moodStats[mood] = { wins: 0, total: 0 };
     moodStats[mood].total += 1;
-    if (t.profit_usd > 0) moodStats[mood].wins += 1;
+    if (t.profit_usd !== null && t.profit_usd > 0) {
+      moodStats[mood].wins += 1;
+    }
   });
 
   const labels = Object.keys(moodStats);

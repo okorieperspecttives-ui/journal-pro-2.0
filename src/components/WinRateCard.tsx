@@ -7,8 +7,8 @@ interface WinRateCardProps {
 }
 
 export default function WinRateCard({ trades }: WinRateCardProps) {
-  const wins = trades.filter((t) => t.profit_usd > 0);
-  const losses = trades.filter((t) => t.profit_usd <= 0);
+  const wins = trades.filter((t) => (t.profit_usd ?? 0) > 0);
+  const losses = trades.filter((t) => (t.profit_usd ?? 0) <= 0);
   const winRate = trades.length
     ? Math.round((wins.length / trades.length) * 100)
     : 0;

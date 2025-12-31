@@ -61,7 +61,7 @@ export default function Profile() {
     return (
       <MotionWrapper>
         <div className="w-full h-full flex items-center justify-center">
-          <LucideLoader className="animate-spin" />
+          <LucideLoader className="animate-spin text-blue-600" size={32} />
         </div>
       </MotionWrapper>
     );

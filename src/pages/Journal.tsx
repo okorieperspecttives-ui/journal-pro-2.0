@@ -303,8 +303,8 @@ export default function RecentTrades() {
   if (loading) {
     return (
       <MotionWrapper>
-        <div className="flex justify-center items-center h-full">
-          <LucideLoader className="animate-spin" />
+        <div className="w-full h-full flex items-center justify-center">
+          <LucideLoader className="animate-spin text-blue-600" size={32} />
         </div>
       </MotionWrapper>
     );

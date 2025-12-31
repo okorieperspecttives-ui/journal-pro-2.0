@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { LucideLoader } from "lucide-react";
 import MotionWrapper from "../helpers/MotionWrapper";
 import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import dayjs from "dayjs";
@@ -13,7 +13,7 @@ import ThemeToggle from "../components/ThemeToggle";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
-  const { user, loading } = useAuth();
+  const { user, loading, setLoading } = useAuth();
   const navigate = useNavigate();
 
   // Local state for dashboard data
@@ -26,6 +26,7 @@ export default function Dashboard() {
     if (!user) return;
 
     const fetchDashboardData = async () => {
+      setLoading(true);
       const startOfWeek = dayjs().startOf("week").toISOString();
       const endOfWeek = dayjs().endOf("week").toISOString();
 
@@ -83,6 +84,7 @@ export default function Dashboard() {
         );
         setPnl(totalPnl);
       }
+      setLoading(false);
     };
 
     fetchDashboardData();
@@ -105,7 +107,50 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Welcome to TradePilot
           </h1>
-          {/* Public incentives */}
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+            {/* Card 1 */}
+            <Link
+              to="/auth"
+              className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition"
+            >
+              <h2 className="text-lg font-semibold text-blue-600 mb-2">
+                Track Your Trades
+              </h2>
+              <p className="text-sm text-gray-600">
+                Log every trade with notes, strategies, and outcomes to improve
+                your performance.
+              </p>
+            </Link>
+
+            {/* Card 2 */}
+            <Link
+              to="/auth"
+              className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition"
+            >
+              <h2 className="text-lg font-semibold text-blue-600 mb-2">
+                Analyze Performance
+              </h2>
+              <p className="text-sm text-gray-600">
+                Get win rates, strategy insights, and mood impact analytics to
+                sharpen your edge.
+              </p>
+            </Link>
+
+            {/* Card 3 */}
+            <Link
+              to="/auth"
+              className="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition"
+            >
+              <h2 className="text-lg font-semibold text-blue-600 mb-2">
+                Stay Accountable
+              </h2>
+              <p className="text-sm text-gray-600">
+                Build discipline with journaling and track your growth over
+                time.
+              </p>
+            </Link>
+          </div>
         </div>
       </MotionWrapper>
     );

@@ -12,7 +12,9 @@ export default function StrategyPerformance({
     const strat = t.strategy ?? "Unknown";
     if (!strategyStats[strat]) strategyStats[strat] = { wins: 0, total: 0 };
     strategyStats[strat].total += 1;
-    if (t.profit_usd > 0) strategyStats[strat].wins += 1;
+    if ((t.profit_usd ?? 0) > 0) {
+      strategyStats[strat].wins += 1;
+    }
   });
 
   return (
