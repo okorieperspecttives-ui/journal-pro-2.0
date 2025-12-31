@@ -7,6 +7,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  //Theme Toggle
+
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  
+  }, [theme]);
+
   const ensureUserExists = async (user: any) => {
     if (!user) return;
     try {
@@ -76,7 +86,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signInWithGoogle, signOut, setLoading, setUser }}
+      value={{
+        user,
+        loading,
+        signInWithGoogle,
+        signOut,
+        setLoading,
+        setUser,
+        theme,
+        setTheme,
+      }}
     >
       {children}
     </AuthContext.Provider>

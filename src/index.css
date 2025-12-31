@@ -52,3 +52,31 @@
 .remove-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Light mode */
+  --color-primary: #2563eb; /* blue-600 */
+  --color-background: #f9fafb; /* gray-50 */
+  --color-text: #111827; /* gray-900 */
+  --color-card: #ffffff; /* white */
+  --color-input: #f3f4f6; /* gray-100 */
+  --color-border: #e5e7eb; /* gray-200 */
+  --color-muted: #6b7280; /* gray-500 */
+  --color-success: #10b981; /* green-500 */
+  --color-error: #ef4444; /* red-500 */
+  --color-warning: #f59e0b; /* amber-500 */
+
+  /* Dark mode */
+  --color-primary-dark: #3b82f6; /* blue-500 */
+  --color-background-dark: #111827; /* gray-900 */
+  --color-text-dark: #f9fafb; /* gray-50 */
+  --color-card-dark: #1f2937; /* gray-800 */
+  --color-input-dark: #374151; /* gray-700 */
+  --color-border-dark: #4b5563; /* gray-600 */
+  --color-muted-dark: #9ca3af; /* gray-400 */
+  --color-success-dark: #34d399; /* green-400 */
+  --color-error-dark: #f87171; /* red-400 */
+  --color-warning-dark: #fbbf24; /* amber-400 */
+}

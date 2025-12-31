@@ -13,12 +13,20 @@ import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "./hooks/useAuth";
 
 export default function App() {
+  const { theme } = useAuth();
   return (
     <Router>
       {/* Mobile-first app shell */}
-      <div className="h-screen max-w-sm md:max-w-screen mx-auto bg-gray-50 flex flex-co safe-area">
+      <div
+        className={
+          theme === "dark"
+            ? "dark h-screen max-w-sm md:max-w-screen mx-auto bg-gray-50 flex flex-co safe-area font-[montserrat]"
+            : "h-screen max-w-sm md:max-w-screen mx-auto bg-gray-50 flex flex-co safe-area font-[montserrat]"
+        }
+      >
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto remove-scrollbar">
           <Routes>

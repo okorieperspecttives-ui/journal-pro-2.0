@@ -8,6 +8,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import dayjs from "dayjs";
 import { supabase } from "../config/supabase"; // adjust path
 import type { TradeEntry } from "../types";
+import ThemeToggle from "../components/ThemeToggle";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -116,8 +117,9 @@ export default function Dashboard() {
 
   return (
     <MotionWrapper>
-      <div className="h-screen bg-gray-50 p-6 overflow-y-auto">
+      <div className="h-screen  bg-gray-50 p-6 overflow-y-auto remove-scrollbar relative">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
+        <ThemeToggle />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 1. Equity & Account Summary */}
@@ -167,9 +169,7 @@ export default function Dashboard() {
           {/* 3. Recent Journal Entries */}
           <div className="bg-white rounded-xl shadow-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-blue-600">
-                Recent Journal Entries
-              </h2>
+              <h2 className="text-lg font-semibold text-blue-600">Recents</h2>
               <button
                 onClick={() => navigate("/journal")}
                 className="text-sm text-blue-600 hover:underline"
@@ -190,7 +190,7 @@ export default function Dashboard() {
                     <h3 className="text-sm font-semibold text-gray-800">
                       {entry.symbol} — {entry.strategy}
                     </h3>
-                    <p className="text-xs text-gray-600 truncate">
+                    <p className="text-xs text-gray-600 truncate font-[dm-sans]">
                       {entry.notes ?? "No notes"}
                     </p>
                   </div>
@@ -200,7 +200,7 @@ export default function Dashboard() {
           </div>
 
           {/* 4. Mood Impact */}
-          <div className="bg-white rounded-xl shadow-md p-6">
+          <div className="bg-white rounded-xl shadow-md mb-14 p-6">
             <h2 className="text-lg font-semibold text-blue-600 mb-4">
               Mood Impact
             </h2>
