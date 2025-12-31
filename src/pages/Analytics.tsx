@@ -30,7 +30,7 @@ export default function Analytics() {
   if (loading) return <div className="p-4">Loading analytics...</div>;
 
   return (
-    <div className="p-4 pb-8">
+    <div className="p-4 pb-8 flex flex-col gap-8">
       <h2 className="text-xl font-bold">Analytics</h2>
       <WinRateCard trades={trades} />
       <StrategyPerformance trades={trades} />

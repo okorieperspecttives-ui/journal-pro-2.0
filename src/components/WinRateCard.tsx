@@ -14,26 +14,34 @@ export default function WinRateCard({ trades }: WinRateCardProps) {
     : 0;
 
   return (
-    <section>
-      <h3 className="text-lg font-semibold  text-center mb-2">Win Rate</h3>
-      <div className="flex items-center flex-col gap-2 justify-center space-x-6 space-y-4">
-        <div className="w-24 h-24">
+    <div className="bg-white rounded-xl space-y-10 shadow-md p-6 border border-gray-100">
+      {/* Title */}
+      <h3 className="text-lg font-semibold text-gray-800 text-center mb-4">
+        Win Rate
+      </h3>
+
+      {/* Content */}
+      <div className="flex flex-col items-center gap-4">
+        {/* Circular chart */}
+        <div className="w-28 h-28">
           <CircularProgressbar
             value={winRate}
             text={`${winRate}%`}
             styles={buildStyles({
-              textSize: "16px",
-              pathColor: "#3b82f6",
-              textColor: "#111827",
-              trailColor: "#e5e7eb",
+              textSize: "18px",
+              pathColor: "#3b82f6", // Tailwind blue-500
+              textColor: "#111827", // Tailwind gray-900
+              trailColor: "#e5e7eb", // Tailwind gray-200
             })}
           />
         </div>
-        <div className="text-sm text-gray-600">
-          <p>Wins: {wins.length}</p>
-          <p>Losses: {losses.length}</p>
+
+        {/* Stats */}
+        <div className="flex flex-col items-center text-sm space-y-1">
+          <p className="text-green-600 font-medium">Wins: {wins.length}</p>
+          <p className="text-red-500 font-medium">Losses: {losses.length}</p>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
