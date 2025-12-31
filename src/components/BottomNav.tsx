@@ -9,7 +9,7 @@ import {
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-16 bg-blue-600  rounded-full flex justify-around items-center md:hidden safe-bottom z-50">
+    <nav className="fixed bottom-0 left-0 right-0 h-16 w-[95%] mx-auto bg-blue-600  rounded-full flex justify-around items-center md:hidden safe-bottom z-50">
       {/* Dashboard */}
       <NavLink
         to="/dashboard"
