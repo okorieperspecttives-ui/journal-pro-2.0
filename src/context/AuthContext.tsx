@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
-  
   }, [theme]);
 
   const ensureUserExists = async (user: any) => {
@@ -65,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin, // ensures session comes back to your app
+          redirectTo: `${window.location.origin}/auth`,
         },
       });
       if (error) throw error;

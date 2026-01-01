@@ -14,7 +14,7 @@ export default function Auth() {
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-  const { user, loading } = useAuth();
+  const { user, loading, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -175,12 +175,23 @@ export default function Auth() {
               </div>
               <button
                 type="submit"
-                className="w-full py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition font-semibold"
+                className="w-full py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition font-semibold"
               >
                 Signup
               </button>
             </form>
           )}
+
+          {/*Google Login */}
+
+          <div>
+            <button
+              onClick={signInWithGoogle}
+              className="w-full py-3 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition font-semibold cursor-pointer"
+            >
+              Google Login
+            </button>
+          </div>
 
           {/* Message */}
           {message && (

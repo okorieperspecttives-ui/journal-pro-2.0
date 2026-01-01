@@ -16,6 +16,8 @@ export default function Profile() {
 
   const navigate = useNavigate();
 
+  const truncate = (string: string) => string.substring(0, 22);
+
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user) {
@@ -112,7 +114,9 @@ export default function Profile() {
               <h2 className="text-lg font-semibold">
                 {profile?.full_name || "Your Name"}
               </h2>
-              <p className="text-sm text-gray-500">{user?.email}</p>
+              <p className="text-sm text-gray-500 ">
+                {truncate(user?.email)}****
+              </p>
             </div>
           </div>
 

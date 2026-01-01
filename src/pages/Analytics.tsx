@@ -61,11 +61,13 @@ export default function Analytics() {
     );
 
   return (
-    <div className="p-4 pb-8 flex flex-col gap-8">
-      <h2 className="text-xl font-bold">Analytics</h2>
-      <WinRateCard trades={trades} />
-      <StrategyPerformance trades={trades} />
-      <MoodImpact trades={trades} />
-    </div>
+    <MotionWrapper>
+      <div className="p-4 pb-20 flex flex-col gap-8">
+        <h2 className="text-xl font-bold">Analytics</h2>
+        <WinRateCard trades={trades} />
+        <StrategyPerformance trades={trades} />
+        <MoodImpact trades={trades} />
+      </div>
+    </MotionWrapper>
   );
 }

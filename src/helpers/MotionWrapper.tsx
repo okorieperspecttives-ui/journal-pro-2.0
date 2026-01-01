@@ -25,7 +25,7 @@ export default function MotionWrapper({ children }: MotionWrapperProps) {
       exit="exit"
       variants={pageVariants}
       transition={pageTransition}
-      className="w-full h-full"
+      className="w-full h-full pb-20"
     >
       {children}
     </motion.div>

@@ -137,7 +137,7 @@ export default function LogTrade() {
 
   return (
     <MotionWrapper>
-      <div className="p-4">
+      <div className="p-4 pb-20 remove_scrollbar">
         <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
 
         <form
