@@ -162,23 +162,27 @@ export default function Dashboard() {
 
   return (
     <MotionWrapper>
-      <div className="h-screen  bg-gray-50 p-6 overflow-y-auto remove-scrollbar relative">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
+      <div className="h-screen w-full  bg-gray-50 dark:bg-background-dark p-6 overflow-y-auto remove-scrollbar relative">
+        <h1 className="text-2xl font-bold text-black dark:text-text-dark mb-6">
+          Dashboard
+        </h1>
         <ThemeToggle />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 1. Equity & Account Summary */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-lg font-semibold text-blue-600 mb-4">
+          <div className="bg-white dark:bg-card-dark rounded-xl shadow-md p-6">
+            <h2 className="text-lg font-semibold text-blue-600 dark:text-text-dark mb-4">
               Equity & Account Summary
             </h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300 my-4 font-semibold">
               Balance: ${user.balance ?? 0}
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-300 my-4 font-semibold">
               Equity: ${(user.balance ?? 0) + pnl}
             </p>
-            <p className="text-sm text-gray-600">PnL: ${pnl}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 my-4 font-semibold">
+              PnL: ${pnl}
+            </p>
           </div>
 
           {/* 2. Current Week Performance */}
