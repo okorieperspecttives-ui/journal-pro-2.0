@@ -16,11 +16,11 @@ export default function MoodSelector({
   onChange: (val: string) => void;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700">
+    <div className="my-3">
+      <label className="block text-sm font-medium text-gray-700 dark:text-text-dark">
         Mood / Psychology
       </label>
-      <div className="flex space-x-4 mt-1">
+      <div className="flex space-x-4 mt-1 dark:bg-background-dark rounded p-2">
         {moods.map(({ label, icon: Icon, color }) => (
           <button
             key={label}

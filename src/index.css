@@ -56,7 +56,7 @@
 
 @theme {
   /* Light mode */
-  --color-primary: #2563eb; /* blue-600 */
+  --color-primary: #1f2937; /* gray-800 */
   --color-background: #f9fafb; /* gray-50 */
   --color-text: #111827; /* gray-900 */
   --color-card: #ffffff; /* white */
@@ -68,7 +68,7 @@
   --color-warning: #f59e0b; /* amber-500 */
 
   /* Dark mode */
-  --color-primary-dark: #3b82f6; /* blue-500 */
+  --color-primary-dark: #1f2937; /* gray-800 */
   --color-background-dark: #111827; /* gray-900 */
   --color-text-dark: #f9fafb; /* gray-50 */
   --color-card-dark: #1f2937; /* gray-800 */

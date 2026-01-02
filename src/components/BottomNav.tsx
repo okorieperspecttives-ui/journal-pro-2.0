@@ -9,14 +9,14 @@ import {
 
 export default function BottomNav() {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 h-14 w-[98%] mx-auto bg-blue-600  rounded-full flex justify-around items-center md:hidden shadow-xs shadow-gray-500 safe-bottom z-50">
+    <nav className="fixed bottom-0 left-0 right-0 h-14 w-[98%] mx-auto bg-blue-600 dark:bg-background-dark rounded-full flex justify-around items-center md:hidden shadow-xs shadow-gray-500 safe-bottom z-40">
       {/* Dashboard */}
       <NavLink
         to="/dashboard"
         className={({ isActive }) =>
           `flex items-center justify-center h-10 px-4 transition-all duration-1000 ${
             isActive
-              ? "bg-white rounded-full text-blue-600 shadow-sm"
+              ? "bg-white rounded-full text-blue-600 dark:text-card-dark shadow-sm"
               : "text-white"
           }`
         }
@@ -37,7 +37,7 @@ export default function BottomNav() {
         className={({ isActive }) =>
           `flex items-center justify-center h-10 px-4 transition-all duration-200 ${
             isActive
-              ? "bg-white rounded-full text-blue-600 shadow-sm"
+              ? "bg-white rounded-full text-blue-600 dark:text-card-dark shadow-sm"
               : "text-white"
           }`
         }
@@ -56,7 +56,7 @@ export default function BottomNav() {
         className={({ isActive }) =>
           `flex items-center justify-center h-10 px-4 transition-all duration-200 ${
             isActive
-              ? "bg-white rounded-full text-blue-600 shadow-sm"
+              ? "bg-white rounded-full text-blue-600 dark:text-card-dark shadow-sm"
               : "text-white"
           }`
         }
@@ -75,7 +75,7 @@ export default function BottomNav() {
         className={({ isActive }) =>
           `flex items-center justify-center h-10 px-4 transition-all duration-200 ${
             isActive
-              ? "bg-white rounded-full text-blue-600 shadow-sm"
+              ? "bg-white rounded-full text-blue-600 dark:text-card-dark shadow-sm"
               : "text-white"
           }`
         }
@@ -96,7 +96,7 @@ export default function BottomNav() {
         className={({ isActive }) =>
           `flex items-center justify-center h-10 px-4 transition-all duration-200 ${
             isActive
-              ? "bg-white rounded-full text-blue-600 shadow-sm"
+              ? "bg-white rounded-full text-blue-600 dark:text-card-dark shadow-sm"
               : "text-white"
           }`
         }

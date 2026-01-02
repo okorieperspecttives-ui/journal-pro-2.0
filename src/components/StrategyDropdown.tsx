@@ -9,13 +9,13 @@ export default function StrategyDropdown({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
         Entry Strategy
       </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        className="mt-1 w-full rounded-md border-gray-300 dark:text-text-dark shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 dark:bg-background-dark p-2"
       >
         {strategies.map((strategy) => (
           <option key={strategy} value={strategy}>

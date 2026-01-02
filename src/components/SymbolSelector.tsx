@@ -38,16 +38,27 @@ export default function SymbolSelector({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700">Symbol</label>
+      <label className="block text-sm font-medium text-gray-700 dark:text-text-dark">
+        Symbol
+      </label>
       <select
         value={value}
         required={required}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        className="mt-1 w-full dark:text-gray-300 rounded-md remove_scrolbar  border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 dark:bg-background-dark p-2"
       >
-        <option value="">Select a pair</option>
+        <option
+          value=""
+          className="dark:text-text-dark dark:bg-background-dark w-full"
+        >
+          Select a pair
+        </option>
         {symbols.sort().map((symbol) => (
-          <option key={symbol} value={symbol}>
+          <option
+            key={symbol}
+            value={symbol}
+            className="dark:text-text-dark dark:bg-background-dark w-full"
+          >
             {symbol}
           </option>
         ))}

@@ -1,6 +1,7 @@
 import type { TradeEntry } from "../types";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { useAuth } from "../hooks/useAuth";
 
 interface WinRateCardProps {
   trades: TradeEntry[];
@@ -13,10 +14,11 @@ export default function WinRateCard({ trades }: WinRateCardProps) {
     ? Math.round((wins.length / trades.length) * 100)
     : 0;
 
+  const { theme } = useAuth();
   return (
-    <div className="bg-white rounded-xl space-y-10 shadow-md p-6 border border-gray-100">
+    <div className="bg-white rounded-xl dark:bg-card-dark space-y-10 shadow-md p-6 border border-gray-100">
       {/* Title */}
-      <h3 className="text-lg font-semibold text-gray-800 text-center mb-4">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-text-dark text-center mb-4">
         Win Rate
       </h3>
 
@@ -29,9 +31,15 @@ export default function WinRateCard({ trades }: WinRateCardProps) {
             text={`${winRate}%`}
             styles={buildStyles({
               textSize: "18px",
-              pathColor: "#3b82f6", // Tailwind blue-500
-              textColor: "#111827", // Tailwind gray-900
-              trailColor: "#e5e7eb", // Tailwind gray-200
+              pathColor: theme === "dark" ? "#fff" : "#000",
+              textColor:
+                theme === "dark"
+                  ? "var(--color-text-dark)" // light text for dark mode
+                  : "var(--color-text)", // dark text for light mode
+              trailColor:
+                theme === "dark"
+                  ? "var(--color-border-dark)"
+                  : "var(--color-border)",
             })}
           />
         </div>

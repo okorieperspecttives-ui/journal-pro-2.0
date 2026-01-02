@@ -49,18 +49,63 @@ export default function MoodImpact({ trades }: MoodImpactProps) {
     ],
   };
 
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom" as const,
+        labels: {
+          color: "#111827", // gray-900 for light mode
+        },
+      },
+      tooltip: {
+        backgroundColor: "#ffffff", // white for light mode
+        titleColor: "#111827", // gray-900
+        bodyColor: "#111827",
+        borderColor: "#e5e7eb", // gray-200
+        borderWidth: 1,
+      },
+    },
+  };
+
+  const darkOptions = {
+    ...options,
+    plugins: {
+      ...options.plugins,
+      legend: {
+        position: "bottom" as const,
+        labels: {
+          color: "#f9fafb", // gray-50 for dark mode
+        },
+      },
+      tooltip: {
+        backgroundColor: "#1f2937", // gray-800
+        titleColor: "#f9fafb", // gray-50
+        bodyColor: "#f9fafb",
+        borderColor: "#4b5563", // gray-600
+        borderWidth: 1,
+      },
+    },
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-      <h3 className="text-lg font-semibold text-gray-800 text-center mb-10">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 text-center mb-10">
         Mood Impact on Performance
       </h3>
       <div className="w-full h-72">
+        {/* Use dark mode options if the page is in dark mode */}
         <Bar
           data={moodData}
-          options={{ responsive: true, maintainAspectRatio: false }}
+          options={
+            document.documentElement.classList.contains("dark")
+              ? darkOptions
+              : options
+          }
         />
       </div>
-      <div className="mt-6 space-y-2 text-sm text-gray-600">
+      <div className="mt-6 space-y-2 text-sm text-gray-600 dark:text-gray-300">
         {labels.map((mood, idx) => (
           <p key={mood}>
             {mood}: {winRates[idx]}% win rate ({moodStats[mood].wins}/

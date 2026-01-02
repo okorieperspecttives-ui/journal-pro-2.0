@@ -31,13 +31,13 @@ export default function TradeCard({ trade, onClick, onHold }: TradeCardProps) {
       onMouseLeave={handleMouseUp}
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
-      className={`flex justify-between bg-white p-3 pl-4 no-highlight-card cursor-pointer rounded-lg shadow-sm border-l-4 mb-3 ${
+      className={`flex justify-between bg-white dark:bg-card-dark p-3 pl-4 no-highlight-card cursor-pointer rounded-lg shadow-sm border-l-4 mb-3 ${
         trade.direction === "Long" ? "border-green-500" : "border-red-500"
       }`}
     >
       <div>
-        <p className="font-semibold">{trade.symbol}</p>
-        <p className="text-xs text-gray-500">
+        <p className="font-semibold dark:text-text-dark">{trade.symbol}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-300">
           {trade.strategy} • {dayjs(trade.executed_at).format("MMM D")}
         </p>
       </div>

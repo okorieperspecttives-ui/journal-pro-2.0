@@ -66,16 +66,16 @@ export default function Auth() {
 
   return (
     <MotionWrapper>
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-        <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 space-y-6">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-background-dark p-6">
+        <div className="w-full max-w-md bg-white dark:bg-card-dark rounded-xl shadow-lg p-8 space-y-6">
           {/* Tabs */}
           <div className="flex rounded-lg overflow-hidden border border-gray-200">
             <button
               onClick={() => setActiveTab("login")}
               className={`flex-1 py-2 font-semibold transition ${
                 activeTab === "login"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-blue-600 dark:bg-background-dark text-white"
+                  : "bg-gray-100 text-gray-600 dark:text-gray-300 dark:bg-card-dark hover:bg-gray-200"
               }`}
             >
               Login
@@ -84,8 +84,8 @@ export default function Auth() {
               onClick={() => setActiveTab("signup")}
               className={`flex-1 py-2 font-semibold transition ${
                 activeTab === "signup"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-blue-600 dark:bg-background-dark text-white"
+                  : "bg-gray-100 text-gray-600 dark:text-gray-300 dark:bg-card-dark hover:bg-gray-200"
               }`}
             >
               Signup
@@ -100,7 +100,7 @@ export default function Auth() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-none focus:ring-2 focus:ring-blue-none outline-none transition dark:bg-input-dark dark:text-gray-300"
                 required
               />
               <div className="relative">
@@ -109,7 +109,7 @@ export default function Auth() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                  className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-none focus:ring-2 focus:ring-blue-none outline-none transition dark:bg-input-dark dark:text-gray-300"
                   required
                 />
                 <button
@@ -136,7 +136,7 @@ export default function Auth() {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                className="w-full rounded-lg bg-gray-50 p-3 border border-none focus:border-none focus:ring-2 focus:ring-none outline-none transition dark:bg-input-dark dark:text-gray-300"
                 required
               />
               <div className="relative">
@@ -145,7 +145,7 @@ export default function Auth() {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                  className="w-full rounded-lg bg-gray-50 p-3 border border-none focus:border-none focus:ring-2 focus:ring-none outline-none transition dark:bg-input-dark dark:text-gray-300"
                   required
                 />
                 <button
@@ -162,7 +162,7 @@ export default function Auth() {
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full rounded-lg bg-gray-50 p-3 border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                  className="w-full rounded-lg bg-gray-50 p-3 border border-none focus:border-none focus:ring-2 focus:ring-none outline-none transition dark:bg-input-dark dark:text-gray-300"
                   required
                 />
                 <button

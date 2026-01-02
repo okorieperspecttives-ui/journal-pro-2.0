@@ -282,15 +282,17 @@ export default function RecentTrades() {
   if (!user) {
     return (
       <MotionWrapper>
-        <div className="h-screen flex items-center justify-center bg-gray-50">
-          <div className="bg-white rounded-xl shadow-md p-6 w-full max-w-sm text-center">
-            <h1 className="text-xl font-semibold mb-4">Log New Trade</h1>
-            <p className="mb-4 text-gray-600">
+        <div className="h-screen flex items-center justify-center bg-gray-50 dark:bg-background-dark">
+          <div className="bg-card dark:bg-card-dark w-[95%] rounded-xl shadow-md p-6  max-w-sm text-center">
+            <h1 className="text-xl  font-semibold mb-4 text-text dark:text-text-dark">
+              Journal
+            </h1>
+            <p className="mb-4 text-gray-600 dark:text-gray-300">
               You must be logged in to access this page.
             </p>
             <button
               onClick={() => (window.location.href = "/auth")}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+              className="px-4 py-2 bg-blue-600 dark:bg-background-dark text-white rounded-lg shadow hover:bg-blue-700 dark:hover:bg-card-dark transition"
             >
               Go to Auth Page
             </button>
@@ -303,8 +305,11 @@ export default function RecentTrades() {
   if (loading) {
     return (
       <MotionWrapper>
-        <div className="w-full h-full flex items-center justify-center">
-          <LucideLoader className="animate-spin text-blue-600" size={32} />
+        <div className="w-full h-screen dark:bg-background-dark  flex items-center justify-center">
+          <LucideLoader
+            className="animate-spin text-blue-600 dark:text-text-dark"
+            size={32}
+          />
         </div>
       </MotionWrapper>
     );
@@ -312,8 +317,10 @@ export default function RecentTrades() {
 
   return (
     <MotionWrapper>
-      <div className="p-4 remove-scrollbar">
-        <h1 className="text-xl font-semibold mb-4">Recent Trades</h1>
+      <div className="p-4 remove-scrollbar bg-background h-screen dark:bg-background-dark">
+        <h1 className="text-xl font-semibold mb-4 text-text dark:text-text-dark">
+          Recent Trades
+        </h1>
 
         {/* Search + Filters */}
         <div className="flex flex-col gap-2 mb-4">
@@ -325,7 +332,7 @@ export default function RecentTrades() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-3 py-2  rounded border-gray-300 shadow-sm 
-                focus:border-none focus:ring-0 focus:outline-none"
+                focus:border-none focus:ring-0 focus:outline-none dark:bg-input-dark dark:placeholder-text-dark"
             />
           </div>
           <div className="flex items-center gap-2 ">
@@ -362,9 +369,11 @@ export default function RecentTrades() {
         {/* Trades grouped by month */}
         {Object.entries(groupedTrades).map(([month, trades]) => (
           <div key={month} className="mb-6">
-            <h2 className="text-lg font-semibold mb-2">{month}</h2>
+            <h2 className="text-lg font-semibold mb-2 dark:text-text-dark text-text">
+              {month}
+            </h2>
             {trades.length === 0 ? (
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-text-dark">
                 No trades match this filter.
               </p>
             ) : (
@@ -387,8 +396,10 @@ export default function RecentTrades() {
         {isModalOpen && selectedTrade && (
           <MotionWrapper>
             <div className="fixed inset-0 transition-colors duration-500 ease-in-out bg-black/80 flex items-center justify-center z-50">
-              <div className="bg-gray-100 rounded-lg shadow-lg p-6 max-w-md w-[90%]">
-                <h2 className="text-lg font-semibold mb-4">Edit Trade</h2>
+              <div className="bg-gray-100 dark:bg-background-dark rounded-lg shadow-lg p-6 max-w-md w-[90%]">
+                <h2 className="text-lg font-semibold mb-4 text-text dark:text-text-dark">
+                  Edit Trade
+                </h2>
 
                 {/* Editable fields */}
                 <div className="space-y-4">
@@ -402,7 +413,7 @@ export default function RecentTrades() {
                         symbol: e.target.value,
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300"
                     placeholder="Symbol"
                   />
 
@@ -416,7 +427,7 @@ export default function RecentTrades() {
                         entry_price: parseFloat(e.target.value),
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300"
                     placeholder="Entry Price"
                   />
 
@@ -430,7 +441,7 @@ export default function RecentTrades() {
                         exit_price: parseFloat(e.target.value),
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300"
                     placeholder="Exit Price"
                   />
 
@@ -444,7 +455,7 @@ export default function RecentTrades() {
                         risk_usd: parseFloat(e.target.value),
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300"
                     placeholder="Risk (USD)"
                   />
 
@@ -458,7 +469,7 @@ export default function RecentTrades() {
                         profit_usd: parseFloat(e.target.value),
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300"
                     placeholder="Profit/Loss (USD)"
                   />
 
@@ -471,7 +482,7 @@ export default function RecentTrades() {
                         direction: e.target.value as "Long" | "Short",
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300"
                   >
                     <option value="Long">Long</option>
                     <option value="Short">Short</option>
@@ -486,7 +497,7 @@ export default function RecentTrades() {
                         status: e.target.value,
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 dark:text-gray-300 dark:bg-background-dark"
                   >
                     <option value="Pending">Pending</option>
                     <option value="Open">Open</option>
@@ -503,7 +514,7 @@ export default function RecentTrades() {
                         notes: e.target.value,
                       })
                     }
-                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 whitespace-pre-wrap"
+                    className="w-full bg-transparent border-b border-gray-300 focus:border-blue-500 focus:ring-0 p-2 whitespace-pre-wrap dark:text-gray-300"
                     placeholder="Notes"
                   />
                 </div>
@@ -512,13 +523,13 @@ export default function RecentTrades() {
                 <div className="flex justify-end gap-2 mt-6">
                   <button
                     onClick={closeModal}
-                    className="px-4 py-2 bg-gray-300 rounded-md"
+                    className="px-4 py-2 bg-gray-300 dark:bg-gray-50 dark:text-background-dark dark:bg-dark rounded-md"
                   >
                     <X className="w-7 h-7" />
                   </button>
                   <button
                     onClick={handleSave}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md"
+                    className="px-4 py-2 bg-blue-600 dark:bg-gray-50 dark:text-background-dark text-white rounded-md"
                     disabled={saving}
                   >
                     {saving ? (
@@ -536,8 +547,10 @@ export default function RecentTrades() {
         {actionModalOpen && selectedTrade && (
           <MotionWrapper>
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-              <div className="bg-gray-100 rounded-lg shadow-lg p-6 max-w-sm w-[90%] text-center">
-                <h2 className="text-lg font-semibold mb-4">Choose Action</h2>
+              <div className="bg-gray-100 rounded-lg dark:bg-background-dark shadow-lg p-6 max-w-sm w-[90%] text-center">
+                <h2 className="text-lg font-semibold mb-4 dark:text-gray-300">
+                  Choose Action
+                </h2>
 
                 {/* Action buttons */}
                 <div className="flex justify-center gap-6">
@@ -577,8 +590,8 @@ export default function RecentTrades() {
         {confirmModal.open && selectedTrade && (
           <MotionWrapper>
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-[90%] text-center">
-                <h2 className="text-lg font-semibold mb-4">
+              <div className="bg-white rounded-lg dark:bg-background-dark shadow-lg p-6 max-w-sm w-[90%] text-center">
+                <h2 className="text-lg font-semibold mb-4 text-text dark:text-text-dark">
                   {confirmModal.type === "delete"
                     ? "Confirm Delete?"
                     : "Confirm Save All?"}

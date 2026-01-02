@@ -9,7 +9,7 @@ const pageVariants = {
 };
 
 const pageTransition = {
-  duration: 0.1,
+  duration: 0.5,
   ease: easeOut,
 };
 
@@ -25,7 +25,7 @@ export default function MotionWrapper({ children }: MotionWrapperProps) {
       exit="exit"
       variants={pageVariants}
       transition={pageTransition}
-      className="w-full h-full pb-20"
+      className="w-full h-full pb-20 bg-background dark:bg-background-dark"
     >
       {children}
     </motion.div>

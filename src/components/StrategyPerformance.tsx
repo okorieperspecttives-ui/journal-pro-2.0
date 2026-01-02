@@ -18,9 +18,9 @@ export default function StrategyPerformance({
   });
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+    <div className="bg-white rounded-xl dark:bg-card-dark shadow-md p-6 border border-gray-100">
       {/* Title */}
-      <h3 className="text-lg font-semibold text-gray-800 text-center mb-6">
+      <h3 className="text-lg font-semibold text-gray-800 dark:text-text-dark text-center mb-6">
         Strategy Performance
       </h3>
 
@@ -38,8 +38,12 @@ export default function StrategyPerformance({
           return (
             <div key={name}>
               <div className="flex justify-between text-sm mb-1">
-                <span className="font-medium text-gray-700">{name}</span>
-                <span className="text-gray-600">{rate}% Win</span>
+                <span className="font-medium text-gray-700 dark:text-gray-400">
+                  {name}
+                </span>
+                <span className="text-gray-600 dark:text-gray-300">
+                  {rate}% Win
+                </span>
               </div>
               <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
                 <div

@@ -8,7 +8,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className=" w-8 h-8 text-center bg-gray-300 cursor-pointer rounded-full text-[--text] absolute top-2 right-2"
+      className=" w-8 h-8 text-center bg-gray-300 cursor-pointer rounded-full text-[--text] fixed top-5 right-10"
     >
       {theme === "light" ? (
         <LucideMoon className="self-center m-auto" />

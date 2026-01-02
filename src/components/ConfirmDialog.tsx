@@ -15,8 +15,8 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-40 z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-80">
-        <p className="text-gray-800 mb-6">{message}</p>
+      <div className="bg-white dark:bg-card-dark rounded-lg shadow-lg p-6 w-80">
+        <p className="text-gray-800 mb-6 dark:text-gray-300">{message}</p>
         <div className="flex justify-end space-x-4">
           <button
             onClick={onCancel}
