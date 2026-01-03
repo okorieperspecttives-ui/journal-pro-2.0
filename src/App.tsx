@@ -24,7 +24,7 @@ export default function App() {
         className={
           theme === "dark"
             ? "dark h-full w-full  mx-auto bg-gray-50 dark:bg-background-dark flex  safe-area font-[montserrat] remove-scrollbar"
-            : "h-screen w-full   mx-auto bg-gray-50 flex  safe-area font-[montserrat] remove-scrollbar"
+            : "h-full w-full   mx-auto bg-gray-50 flex  safe-area font-[montserrat] remove-scrollbar"
         }
       >
         <div className="mx-auto w-sm flex remove_scrollbar items-center justify-center remove-scrollbar">
@@ -42,9 +42,9 @@ export default function App() {
           </div>
           {/*Toast Container */}
           <ToastContainer position="top-right" autoClose={3000} />
-          {/* Bottom nav pinned at bottom (mobile only) */}
-          <BottomNav />
         </div>
+        {/* Bottom nav pinned at bottom (mobile only) */}
+        <BottomNav />
       </div>
     </Router>
   );
