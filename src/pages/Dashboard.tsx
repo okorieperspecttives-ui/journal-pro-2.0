@@ -210,7 +210,7 @@ export default function Dashboard() {
   return (
     <MotionWrapper>
       <div className="h-screen w-full  bg-gray-50 dark:bg-background-dark p-6 overflow-y-auto remove-scrollbar relative">
-        <h1 className="text-2xl font-bold text-black dark:text-text-dark mb-6">
+        <h1 className="text-2xl font-bold text-blue-600 dark:text-text-dark mb-6">
           Dashboard
         </h1>
         <ThemeToggle />
@@ -273,12 +273,12 @@ export default function Dashboard() {
           {/* 3. Recent Journal Entries */}
           <div className="bg-white rounded-xl shadow-md p-6 dark:bg-card-dark">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold text-text dark:text-text-dark">
+              <h2 className="text-lg font-semibold text-blue-500 dark:text-text-dark">
                 Recents
               </h2>
               <button
                 onClick={() => navigate("/journal")}
-                className="text-sm text-text font-semibold underline hover:underline dark:text-text-dark"
+                className="text-sm text-blue-500 font-semibold underline hover:underline dark:text-text-dark"
               >
                 View All
               </button>
