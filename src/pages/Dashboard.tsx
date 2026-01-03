@@ -150,7 +150,7 @@ export default function Dashboard() {
   if (!user) {
     return (
       <MotionWrapper>
-        <div className="h-screen bg-gray-50 dark:bg-background-dark flex flex-col items-center justify-center p-6">
+        <div className="h-screen bg-gray-50 dark:bg-background-dark flex flex-col items-center justify-center p-6 remove-scrollbar">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-text-dark mb-6">
             Welcome to TradePilot
           </h1>

@@ -23,29 +23,28 @@ export default function App() {
       <div
         className={
           theme === "dark"
-            ? "dark h-screen max-w-sm md:max-w-screen mx-auto bg-gray-50 flex flex-co safe-area font-[montserrat]"
-            : "h-screen max-w-sm md:max-w-screen mx-auto bg-gray-50 flex flex-co safe-area font-[montserrat]"
+            ? "dark h-full w-full  mx-auto bg-gray-50 dark:bg-background-dark flex  safe-area font-[montserrat] remove-scrollbar"
+            : "h-screen w-full   mx-auto bg-gray-50 flex  safe-area font-[montserrat] remove-scrollbar"
         }
       >
-        {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto remove-scrollbar">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/log-trade" element={<LogTrade />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
+        <div className="mx-auto w-sm flex remove_scrollbar items-center justify-center remove-scrollbar">
+          {/* Scrollable content area */}
+          <div className="flex-1 overflow-y-auto remove-scrollbar">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/log-trade" element={<LogTrade />} />
+              <Route path="/journal" element={<Journal />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </div>
+          {/*Toast Container */}
+          <ToastContainer position="top-right" autoClose={3000} />
+          {/* Bottom nav pinned at bottom (mobile only) */}
+          <BottomNav />
         </div>
-
-        {/*Toast Container */}
-
-        <ToastContainer position="top-right" autoClose={3000} />
-
-        {/* Bottom nav pinned at bottom (mobile only) */}
-        <BottomNav />
       </div>
     </Router>
   );
