@@ -26,7 +26,7 @@ const symbols = [
   "USD/CHF",
   "USD/JPY",
   "SPX500",
-  "NAS200"
+  "NAS100",
 ];
 
 export default function SymbolSelector({
